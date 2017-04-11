@@ -1,9 +1,16 @@
-" Added by lgalke 28/02/17 
-
 function! angular_cli#init() abort
+  " The guard introduces robustness to multiple invocations
+  if exists( 'g:angular_cli_did_init' ) | return | endif
+  let g:angular_cli_did_init = 1
+  if exists( 'g:angular_cli_debug' ) | echom "Initialising angular-cli commands" | endif
+
+  " Global command initialisation as well as settings
   call angular_cli#CreateEditCommands()
   call angular_cli#CreateGenerateCommands()
   command! -nargs=* Ng call angular_cli#ExecuteNgCommand(<q-args>)
+  if !exists('g:angular_cli_retain_keywordprg')
+    set keywordprg=ng\ doc
+  endif
 endfunction
 
 " The remaining functions are just prefixed by angular_cli# and suffixed by
